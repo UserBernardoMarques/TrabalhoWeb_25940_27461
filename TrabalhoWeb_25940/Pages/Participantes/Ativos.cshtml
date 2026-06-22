@@ -1,0 +1,97 @@
+﻿@page
+@model TrabalhoWeb_25940.Pages.Participantes.AtivosModel
+@{
+    ViewData["Title"] = "Utilizadores Ativos";
+}
+
+<div class="container mt-4 mb-5">
+    <a href="/Index" class="text-secondary fs-5 text-decoration-none mb-3 d-inline-block">
+        <i class="bi bi-arrow-left-circle-fill"></i> Voltar ao Painel
+    </a>
+
+    <h2 class="fw-bold mb-4">Gestão de Utilizadores Ativos</h2>
+
+    <div class="card shadow-sm border-0 mb-5">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0 fw-bold"><i class="bi bi-person-raised-hand me-2"></i>Lista de Alunos</h5>
+        </div>
+        <div class="card-body p-0">
+            @if (Model.Alunos.Count == 0)
+            {
+                <div class="p-4 text-center text-muted">Não existem alunos ativos na plataforma.</div>
+            }
+            else
+            {
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Nome Completo</th>
+                            <th>Email</th>
+                            <th>Idade</th>
+                            <th class="text-end">Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Alunos)
+                        {
+                            <tr>
+                                <td class="fw-bold ps-3">@item.Nome</td>
+                                <td>@item.Email</td>
+                                <td>@item.Idade anos</td>
+                                <td class="text-end pe-3">
+                                    <form method="post" class="d-inline">
+                                        <button type="submit" asp-page-handler="Eliminar" asp-route-id="@item.Id" class="btn btn-outline-danger btn-sm fw-bold" onclick="return confirm('Atenção! Tens a certeza que queres eliminar o aluno @item.Nome e todas as suas inscrições?');">
+                                            <i class="bi bi-trash-fill"></i> Eliminar
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0 fw-bold"><i class="bi bi-easel me-2"></i>Lista de Formadores</h5>
+        </div>
+        <div class="card-body p-0">
+            @if (Model.Formadores.Count == 0)
+            {
+                <div class="p-4 text-center text-muted">Não existem formadores ativos na plataforma.</div>
+            }
+            else
+            {
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Nome Completo</th>
+                            <th>Email</th>
+                            <th>Idade</th>
+                            <th class="text-end">Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Formadores)
+                        {
+                            <tr>
+                                <td class="fw-bold ps-3">@item.Nome</td>
+                                <td>@item.Email</td>
+                                <td>@item.Idade anos</td>
+                                <td class="text-end pe-3">
+                                    <form method="post" class="d-inline">
+                                        <button type="submit" asp-page-handler="Eliminar" asp-route-id="@item.Id" class="btn btn-outline-danger btn-sm fw-bold" onclick="return confirm('Atenção! Tens a certeza que queres eliminar o formador @item.Nome e todos os seus dados?');">
+                                            <i class="bi bi-trash-fill"></i> Eliminar
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</div>

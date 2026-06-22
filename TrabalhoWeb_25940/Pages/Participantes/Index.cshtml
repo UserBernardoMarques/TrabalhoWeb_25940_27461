@@ -1,0 +1,60 @@
+﻿@page
+@model TrabalhoWeb_25940.Pages.Participantes.IndexModel
+@{
+    ViewData["Title"] = "Pedidos de Conta";
+}
+
+<div class="container mt-4">
+    <a href="/Index" class="text-secondary fs-5 text-decoration-none mb-3 d-inline-block" title="Voltar ao Painel Admin">
+        <i class="bi bi-arrow-left-circle-fill"></i> Voltar ao Painel
+    </a>
+
+    <h2 class="fw-bold mb-4">Pedidos de Criação de Conta</h2>
+
+    @if (Model.Participante.Count == 0)
+    {
+        <div class="p-5 text-center text-muted border rounded bg-light">
+            <i class="bi bi-person-check-fill display-4 text-success mb-3"></i>
+            <h3>Tudo em dia!</h3>
+            <p>Não existem novas contas a aguardar aprovação.</p>
+        </div>
+    }
+    else
+    {
+        <table class="table table-hover align-middle shadow-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th>Nome Completo</th>
+                    <th>Email</th>
+                    <th>Idade</th>
+                    <th>Tipo de Perfil</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Participante)
+                {
+                    <tr>
+                        <td class="fw-bold">@item.Nome</td>
+                        <td>@item.Email</td>
+                        <td>@item.Idade anos</td>
+                        <td>
+                            @if(item.IsAluno) { <span class="badge bg-primary">Aluno</span> }
+                            @if(item.IsFormador) { <span class="badge bg-success">Formador</span> }
+                        </td>
+                        <td>
+                            <form method="post" class="d-inline">
+                                <button type="submit" asp-page-handler="Aprovar" asp-route-id="@item.Id" class="btn btn-success btn-sm fw-bold">
+                                    <i class="bi bi-check-lg"></i> Aceitar
+                                </button>
+                                <button type="submit" asp-page-handler="Rejeitar" asp-route-id="@item.Id" class="btn btn-danger btn-sm fw-bold" onclick="return confirm('Rejeitar e apagar esta conta?');">
+                                    <i class="bi bi-x-lg"></i> Recusar
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

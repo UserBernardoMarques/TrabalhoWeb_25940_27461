@@ -1,0 +1,53 @@
+﻿@page
+@model TrabalhoWeb_25940.Pages.Workshops.InscricoesPendentesModel
+@{
+    ViewData["Title"] = "Pedidos de Participação";
+}
+
+<div class="container mt-4">
+    <a href="/Index" class="text-secondary fs-5 text-decoration-none mb-3 d-inline-block" title="Voltar ao Painel Admin">
+        <i class="bi bi-arrow-left-circle-fill"></i> Voltar ao Painel
+    </a>
+
+    <h2 class="fw-bold mb-4">Pedidos de Participação em Workshops</h2>
+
+    @if (Model.Inscricoes.Count == 0)
+    {
+        <div class="p-5 text-center text-muted border rounded bg-light">
+            <i class="bi bi-check-circle display-4 text-success mb-3"></i>
+            <h3>Nenhum pedido pendente</h3>
+            <p>Não existem alunos a aguardar aprovação de vaga neste momento.</p>
+        </div>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Aluno</th>
+                    <th>Email</th>
+                    <th>Workshop Solicitado</th>
+                    <th>Data do Pedido</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Inscricoes)
+                {
+                    <tr>
+                        <td class="fw-bold">@item.Participante?.Nome</td>
+                        <td>@item.Participante?.Email</td>
+                        <td><span class="badge bg-primary">@item.Workshop?.Titulo</span></td>
+                        <td>@item.DataPedido.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>
+                            <form method="post" class="d-inline">
+                                <button type="submit" asp-page-handler="Aprovar" asp-route-id="@item.Id" class="btn btn-success btn-sm fw-bold">Aceitar</button>
+                                <button type="submit" asp-page-handler="Rejeitar" asp-route-id="@item.Id" class="btn btn-danger btn-sm fw-bold" onclick="return confirm('Rejeitar esta inscrição?');">Recusar</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

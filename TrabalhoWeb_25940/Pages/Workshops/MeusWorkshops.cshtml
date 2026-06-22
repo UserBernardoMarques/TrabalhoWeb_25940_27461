@@ -1,0 +1,75 @@
+﻿@page
+@model TrabalhoWeb_25940.Pages.Workshops.MeusWorkshopsModel
+@{
+    ViewData["Title"] = "As Minhas Formações";
+}
+
+<div class="container mt-5 mb-5">
+    <h2 class="fw-bold mb-4"><i class="bi bi-easel-fill text-success me-2"></i>As Minhas Formações</h2>
+    <p class="text-muted mb-4 fs-5">Aqui podes consultar os workshops que propuseste e ver quem são os alunos com vaga confirmada.</p>
+
+    @if (Model.MeusWorkshops.Count == 0)
+    {
+        <div class="p-5 text-center bg-white shadow-sm rounded-4 border">
+            <i class="bi bi-journal-x display-4 text-muted mb-3"></i>
+            <h4 class="text-muted">Ainda não tens nenhum workshop registado.</h4>
+            <a href="/Workshops/Propor" class="btn btn-success mt-3 rounded-pill fw-bold px-4 py-2">Propor Novo Workshop</a>
+        </div>
+    }
+    else
+    {
+        <div class="accordion shadow-sm" id="accordionWorkshops">
+            @foreach (var item in Model.MeusWorkshops)
+            {
+                var idAccordion = "collapse" + item.Workshop.Id;
+                var headingId = "heading" + item.Workshop.Id;
+
+                <div class="accordion-item border-0 border-bottom">
+                    <h2 class="accordion-header" id="@headingId">
+                        <button class="accordion-button collapsed fw-bold fs-5 bg-white text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#@idAccordion" aria-expanded="false" aria-controls="@idAccordion">
+                            <i class="bi bi-bookmark-star-fill text-primary me-3"></i> @item.Workshop.Titulo
+
+                            @if (item.Workshop.Aprovado)
+                            {
+                                <span class="badge bg-success ms-3 rounded-pill">Aprovado</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning text-dark ms-3 rounded-pill">Pendente</span>
+                            }
+
+                            <span class="badge bg-primary ms-3 rounded-pill">@item.InscricoesAprovadas.Count alunos confirmados</span>
+                        </button>
+                    </h2>
+                    <div id="@idAccordion" class="accordion-collapse collapse" aria-labelledby="@headingId" data-bs-parent="#accordionWorkshops">
+                        <div class="accordion-body bg-light p-4">
+                            <h6 class="fw-bold text-secondary mb-3"><i class="bi bi-people-fill me-2"></i>Lista de Alunos Inscritos:</h6>
+
+                            @if (item.InscricoesAprovadas.Count == 0)
+                            {
+                                <div class="alert alert-secondary border-0 text-muted mb-0">
+                                    Nenhum aluno com vaga confirmada neste momento.
+                                </div>
+                            }
+                            else
+                            {
+                                <ul class="list-group shadow-sm">
+                                    @foreach (var aluno in item.InscricoesAprovadas)
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <i class="bi bi-person-check-fill text-success me-2 fs-5 align-middle"></i>
+                                                <span class="fw-bold text-dark">@aluno.Participante?.Nome</span>
+                                            </div>
+                                            <span class="text-muted"><i class="bi bi-envelope me-1"></i> @aluno.Participante?.Email</span>
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

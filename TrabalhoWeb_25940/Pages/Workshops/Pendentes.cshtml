@@ -1,0 +1,51 @@
+﻿@page
+@model TrabalhoWeb_25940.Pages.Workshops.PendentesModel
+@{
+    ViewData["Title"] = "Candidaturas Pendentes";
+}
+
+<div class="container mt-4">
+    <a href="/Index" class="text-secondary fs-5 text-decoration-none mb-3 d-inline-block" title="Voltar ao Painel Admin">
+        <i class="bi bi-arrow-left-circle-fill"></i> Voltar ao Painel
+    </a>
+
+    <h3 class="fw-bold mb-4">Workshops a Aguardar Aprovação</h3>
+
+    @if (Model.WorkshopPendente.Count == 0)
+    {
+        <div class="p-5 text-center text-muted border rounded bg-light">
+            <i class="bi bi-check-circle display-4 text-success mb-3"></i>
+            <h3>Tudo limpo!</h3>
+            <p>Não há candidaturas pendentes neste momento.</p>
+        </div>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Data Sugerida</th>
+                    <th>Categoria</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.WorkshopPendente)
+                {
+                    <tr>
+                        <td class="fw-bold">@item.Titulo</td>
+                        <td>@item.Data.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>@(item.Categoria?.Nome ?? "Sem Categoria")</td>
+                        <td>
+                            <form method="post" class="d-inline">
+                                <button type="submit" asp-page-handler="Aprovar" asp-route-id="@item.Id" class="btn btn-success btn-sm fw-bold">Aprovar</button>
+                                <button type="submit" asp-page-handler="Rejeitar" asp-route-id="@item.Id" class="btn btn-danger btn-sm fw-bold" onclick="return confirm('Rejeitar proposta?');">Rejeitar</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

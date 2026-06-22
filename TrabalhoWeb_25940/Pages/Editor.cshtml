@@ -1,0 +1,44 @@
+﻿@page
+@model TrabalhoWeb_25940.Pages.EditorModel
+@{
+    ViewData["Title"] = "Editor da Plataforma";
+}
+
+<div class="container mt-4">
+    <a href="/Index" class="text-secondary fs-5 text-decoration-none mb-3 d-inline-block" title="Voltar ao Painel Admin">
+        <i class="bi bi-arrow-left-circle-fill"></i> Voltar ao Painel
+    </a>
+
+    <h2 class="fw-bold mb-4 text-danger"><i class="bi bi-pencil-square"></i> Ferramentas de Edição</h2>
+    <hr class="mb-4" />
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body p-4 text-center">
+                    <i class="bi bi-easel display-4 text-primary mb-3"></i>
+                    <h4 class="fw-bold">Workshops</h4>
+                    <p class="text-muted">Adiciona novos workshops diretamente aprovados.</p>
+                    <div class="d-grid gap-2 mt-4">
+                        <a href="/Workshops/Create" class="btn btn-primary fw-bold"><i class="bi bi-plus-lg"></i> Criar Novo</a>
+                        <a href="/Workshops/Index" class="btn btn-outline-primary">Ver Todos os Workshops</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body p-4 text-center">
+                    <i class="bi bi-tags display-4 text-success mb-3"></i>
+                    <h4 class="fw-bold">Categorias</h4>
+                    <p class="text-muted">Gere os temas disponíveis para a plataforma (ex: Tecnologia, Design, Negócios).</p>
+                    <div class="d-grid gap-2 mt-4">
+                        <a href="/Categorias/Create" class="btn btn-success fw-bold"><i class="bi bi-plus-lg"></i> Criar Nova</a>
+                        <a href="/Categorias/Index" class="btn btn-outline-success">Ver Todas as Categorias</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

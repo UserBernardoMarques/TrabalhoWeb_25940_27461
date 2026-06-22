@@ -1,0 +1,46 @@
+﻿@page
+@model TrabalhoWeb_25940.Pages.Workshops.DeleteModel
+
+@{
+    ViewData["Title"] = "Eliminar Workshop";
+}
+
+<div class="container mt-4">
+    <h1 class="text-danger mb-4">Eliminar Workshop</h1>
+
+    <div class="alert alert-warning shadow-sm border-start border-5 border-warning">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <strong>Cuidado!</strong> Tem a certeza que deseja eliminar este workshop? Esta operação é irreversível[cite: 70].
+    </div>
+
+    <div class="card shadow-sm border-danger">
+        <div class="card-body">
+            @if (Model.Workshop != null)
+            {
+                <dl class="row">
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Workshop.Titulo)</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.Workshop.Titulo)</dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Workshop.Data)</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.Workshop.Data)</dd>
+
+                    <dt class="col-sm-3">Categoria</dt>
+                    <dd class="col-sm-9">
+                        @(Model.Workshop.Categoria?.Nome ?? "N/A")
+                    </dd>
+                </dl>
+
+                <form method="post" class="mt-4">
+                    <input type="hidden" asp-for="Workshop.Id" />
+                    <button type="submit" class="btn btn-danger px-4">Confirmar Eliminação</button>
+                    <a asp-page="./Index" class="btn btn-outline-secondary px-4">Cancelar</a>
+                </form>
+            }
+            else
+            {
+                <div class="alert alert-danger">Erro ao carregar os dados para eliminação.</div>
+                <a asp-page="./Index" class="btn btn-secondary">Voltar à Lista</a>
+            }
+        </div>
+    </div>
+</div>

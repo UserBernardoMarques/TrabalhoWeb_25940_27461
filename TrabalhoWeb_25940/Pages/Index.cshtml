@@ -1,0 +1,163 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Página Inicial";
+}
+
+@if (User.IsInRole("Administrador"))
+{
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm border-0 border-start border-warning border-5 h-100 bg-white">
+                    <div class="card-body p-4 d-flex flex-column">
+                        <h4 class="fw-bold text-dark mb-3">
+                            <i class="bi bi-easel text-warning me-2 fs-2 align-middle"></i> Propostas de Oradores
+                        </h4>
+                        <p class="text-muted mb-4 fs-5">
+                            Gere as candidaturas pendentes de utilizadores que querem organizar e dar um novo workshop.
+                        </p>
+                        <a href="/Workshops/Pendentes" class="btn btn-warning fw-bold mt-auto btn-lg w-100 shadow-sm">
+                            Gerir Propostas Pendentes <i class="bi bi-arrow-right-circle ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm border-0 border-start border-info border-5 h-100 bg-white">
+                    <div class="card-body p-4 d-flex flex-column">
+                        <h4 class="fw-bold text-dark mb-3">
+                            <i class="bi bi-person-plus-fill text-info me-2 fs-2 align-middle"></i> Pedidos de Conta
+                        </h4>
+                        <p class="text-muted mb-4 fs-5">
+                            Visualiza e gere todas as novas contas de utilizadores (Alunos e Formadores) registados no site.
+                        </p>
+                        <a href="/Participantes/Index" class="btn btn-info text-white fw-bold mt-auto btn-lg w-100 shadow-sm">
+                            Gerir Contas de Utilizadores <i class="bi bi-arrow-right-circle ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm border-0 border-start border-primary border-5 h-100 bg-white">
+                    <div class="card-body p-4 d-flex flex-column">
+                        <h4 class="fw-bold text-dark mb-3">
+                            <i class="bi bi-ticket-perforated-fill text-primary me-2 fs-2 align-middle"></i> Pedidos de Participação
+                        </h4>
+                        <p class="text-muted mb-4 fs-5">
+                            Aprova ou rejeita os pedidos de alunos que se inscreveram para assistir aos workshops ativos.
+                        </p>
+                        <a href="/Workshops/InscricoesPendentes" class="btn btn-primary text-white fw-bold mt-auto btn-lg w-100 shadow-sm">
+                            Gerir Inscrições em Workshops <i class="bi bi-arrow-right-circle ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm border-0 border-start border-danger border-5 h-100 bg-white">
+                    <div class="card-body p-4 d-flex flex-column">
+                        <h4 class="fw-bold text-dark mb-3">
+                            <i class="bi bi-pencil-square text-danger me-2 fs-2 align-middle"></i> Editor
+                        </h4>
+                        <p class="text-muted mb-4 fs-5">
+                            Modifica o conteúdo do site, adiciona categorias e gere os eventos aceites da plataforma.
+                        </p>
+                        <a href="/Editor" class="btn btn-danger text-white fw-bold mt-auto btn-lg w-100 shadow-sm">
+                            Abrir Editor <i class="bi bi-arrow-right-circle ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 mb-4">
+                <div class="card shadow-sm border-0 border-start border-dark border-5 bg-white">
+                    <div class="card-body p-4 text-center">
+                        <h4 class="fw-bold text-dark mb-3">
+                            <i class="bi bi-people-fill text-dark me-2 fs-2 align-middle"></i> Utilizadores Ativos
+                        </h4>
+                        <p class="text-muted mb-4 fs-5">
+                            Lista completa de todos os alunos e formadores com conta aprovada. Podes eliminar contas indesejadas aqui.
+                        </p>
+                        <a href="/Participantes/Ativos" class="btn btn-dark text-white fw-bold btn-lg px-5 shadow-sm">
+                            Gerir Todos os Utilizadores <i class="bi bi-arrow-right-circle ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
+else
+{
+    <div id="heroCarousel" class="carousel slide mb-4 shadow-sm rounded overflow-hidden" data-bs-ride="carousel" data-bs-interval="4000" style="height: 250px;">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+
+        <div class="carousel-inner" style="height: 250px;">
+            <div class="carousel-item active h-100">
+                <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1200&h=300&fit=crop" class="d-block w-100 h-100" alt="Eventos Gatherio" style="object-fit: cover;">
+            </div>
+            <div class="carousel-item h-100">
+                <img src="https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=1200&h=300&fit=crop" class="d-block w-100 h-100" alt="Comunidade" style="object-fit: cover;">
+            </div>
+            <div class="carousel-item h-100">
+                <img src="https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=1200&h=300&fit=crop" class="d-block w-100 h-100" alt="Networking" style="object-fit: cover;">
+            </div>
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        </button>
+    </div>
+
+    <div class="row text-center mb-5 pb-5">
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 shadow-sm p-3 border-0 bg-white">
+                <div class="card-body d-flex flex-column">
+                    <i class="bi bi-person-raised-hand fs-1 text-primary mb-2"></i>
+                    <h5 class="card-title fw-bold">Quero Aprender</h5>
+                    <p class="card-text text-muted mb-3" style="font-size: 0.9rem;">
+                        Explora a nossa lista de workshops disponíveis e submete a tua candidatura para participar nas sessões que mais gostas.
+                    </p>
+                    <a href="/Workshops/Explorar" class="btn btn-outline-primary mt-auto fw-bold btn-sm">Inscrever em Workshop</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 shadow-sm p-3 border-0 bg-white">
+                <div class="card-body d-flex flex-column">
+                    <i class="bi bi-easel fs-1 text-success mb-2"></i>
+                    <h5 class="card-title fw-bold">Quero Ensinar</h5>
+                    <p class="card-text text-muted mb-3" style="font-size: 0.9rem;">
+                        Tens uma ideia incrível? Submete uma proposta de workshop. A equipa irá analisar e aprovar o teu evento.
+                    </p>
+                    <a href="/Workshops/Propor" class="btn btn-outline-success mt-auto fw-bold btn-sm">Candidatar a Orador</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 shadow-sm p-3 border-0 bg-white">
+                <div class="card-body d-flex flex-column">
+                    <i class="bi bi-info-circle fs-1 text-warning mb-2"></i>
+                    <h5 class="card-title fw-bold">Sobre o Projeto</h5>
+                    <p class="card-text text-muted mb-3" style="font-size: 0.9rem;">
+                        Informações regulamentares sobre os autores, unidade curricular e tecnologias utilizadas neste desenvolvimento.
+                    </p>
+                    <a href="/Sobre" class="btn btn-outline-warning mt-auto fw-bold btn-sm">Ver Créditos</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}

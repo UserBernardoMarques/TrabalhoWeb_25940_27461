@@ -1,0 +1,43 @@
+﻿@page
+@model TrabalhoWeb_25940.Pages.Workshops.IndexModel
+
+@{
+    ViewData["Title"] = "Workshops Disponíveis";
+}
+
+<a href="/Index" class="text-secondary fs-5 text-decoration-none mb-3 d-inline-block" title="Voltar ao Painel Admin">
+    <i class="bi bi-arrow-left-circle-fill"></i> Voltar ao Painel
+</a>
+
+<h1>Workshops Disponíveis</h1>
+
+<p>
+    <a asp-page="Create" class="btn btn-primary">Criar Novo Workshop</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Workshop[0].Titulo)</th>
+            <th>@Html.DisplayNameFor(model => model.Workshop[0].Data)</th>
+            <th>@Html.DisplayNameFor(model => model.Workshop[0].Categoria)</th>
+            <th>@Html.DisplayNameFor(model => model.Workshop[0].Aprovado)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Workshop) {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.Titulo)</td>
+            <td>@Html.DisplayFor(modelItem => item.Data)</td>
+            <td>@Html.DisplayFor(modelItem => item.Categoria.Nome)</td>
+            <td>@Html.DisplayFor(modelItem => item.Aprovado)</td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

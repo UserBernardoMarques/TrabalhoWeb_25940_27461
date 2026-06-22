@@ -1,0 +1,69 @@
+﻿@page
+@model TrabalhoWeb_25940.Pages.SobreModel
+@{
+    ViewData["Title"] = "Sobre o Projeto";
+}
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow border-0 rounded-4 p-5 bg-white">
+                <div class="text-center mb-5">
+                    <i class="bi bi-info-circle-fill display-1 text-warning mb-3"></i>
+                    <h2 class="fw-bold text-dark">Sobre o gather.io</h2>
+                    <p class="text-muted fs-5">Plataforma de Gestão e Inscrição em Workshops</p>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-6 mb-4">
+                        <h5 class="fw-bold text-primary border-bottom pb-2">
+                            <i class="bi bi-mortarboard-fill me-2"></i>Âmbito Académico
+                        </h5>
+                        <ul class="list-unstyled mt-3 fs-6 text-dark">
+                            <li class="mb-2"><strong>Instituição:</strong> Instituto Politécnico de Tomar (IPT)</li>
+                            <li class="mb-2"><strong>Curso:</strong> Engenharia Informática</li>
+                            <li class="mb-2"><strong>Unidade Curricular:</strong> Desenvolvimento Web</li>
+                            <li class="mb-2"><strong>Ano Letivo:</strong> 2025/2026</li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <h5 class="fw-bold text-success border-bottom pb-2">
+                            <i class="bi bi-people-fill me-2"></i>Autoria (Grupo)
+                        </h5>
+                        <div class="mt-3 fs-6 text-dark">
+                            <div class="mb-3 border-start border-success border-3 ps-2">
+                                <strong class="d-block">Bernardo Marques</strong>
+                                <span class="text-muted small">Nº Aluno: 25940</span>
+                            </div>
+                            <div class="mb-2 border-start border-success border-3 ps-2">
+                                <strong class="d-block">Rodrigo Rocha</strong>
+                                <span class="text-muted small">Nº Aluno: 27461</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <h5 class="fw-bold text-danger border-bottom pb-2">
+                        <i class="bi bi-braces-asterisk me-2"></i>Tecnologias Utilizadas
+                    </h5>
+                    <div class="d-flex flex-wrap gap-2 mt-3">
+                        <span class="badge bg-secondary fs-6"><i class="bi bi-code-slash"></i> ASP.NET Core</span>
+                        <span class="badge bg-secondary fs-6"><i class="bi bi-filetype-cs"></i> C# (Razor Pages)</span>
+                        <span class="badge bg-secondary fs-6"><i class="bi bi-database"></i> Entity Framework Core</span>
+                        <span class="badge bg-secondary fs-6"><i class="bi bi-server"></i> SQL Server LocalDB</span>
+                        <span class="badge bg-secondary fs-6"><i class="bi bi-bootstrap"></i> Bootstrap 5 (Bootswatch)</span>
+                        <span class="badge bg-secondary fs-6"><i class="bi bi-box-seam"></i> Web API REST (JSON)</span>
+                    </div>
+                </div>
+
+                <div class="text-center mt-5">
+                    <a href="/Index" class="btn btn-primary fw-bold rounded-pill px-4 py-2 shadow-sm">
+                        <i class="bi bi-house-door-fill me-2"></i>Voltar à Página Inicial
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

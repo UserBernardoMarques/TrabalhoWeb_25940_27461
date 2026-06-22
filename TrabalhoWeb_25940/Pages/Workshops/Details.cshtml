@@ -1,0 +1,52 @@
+﻿@page
+@model TrabalhoWeb_25940.Pages.Workshops.DetailsModel
+
+@{
+    ViewData["Title"] = "Detalhes do Workshop";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4 text-primary">Detalhes do Workshop</h1>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white">
+            <h4 class="mb-0">Informações Gerais</h4>
+        </div>
+        <div class="card-body">
+            @if (Model.Workshop != null)
+            {
+                <dl class="row">
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Workshop.Titulo)</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.Workshop.Titulo)</dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Workshop.Descricao)</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.Workshop.Descricao)</dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Workshop.Data)</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.Workshop.Data)</dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Workshop.Categoria)</dt>
+                    <dd class="col-sm-9">
+                        @* O uso do '?' resolve o aviso CS8602 *@
+                        @(Model.Workshop.Categoria?.Nome ?? "Sem Categoria Definida")
+                    </dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Workshop.Aprovado)</dt>
+                    <dd class="col-sm-9">
+                        <span class="badge @(Model.Workshop.Aprovado ? "bg-success" : "bg-warning text-dark")">
+                            @(Model.Workshop.Aprovado ? "Aprovado" : "Pendente de Aprovação")
+                        </span>
+                    </dd>
+                </dl>
+            }
+            else
+            {
+                <div class="alert alert-danger">Workshop não encontrado.</div>
+            }
+        </div>
+        <div class="card-footer bg-light">
+            <a asp-page="./Edit" asp-route-id="@Model.Workshop?.Id" class="btn btn-warning">Editar</a>
+            <a asp-page="./Index" class="btn btn-secondary">Voltar à Lista</a>
+        </div>
+    </div>
+</div>

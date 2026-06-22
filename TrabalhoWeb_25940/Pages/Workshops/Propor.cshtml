@@ -1,0 +1,52 @@
+﻿@page
+@model TrabalhoWeb_25940.Pages.Workshops.ProporModel
+@{
+    ViewData["Title"] = "Propor Workshop";
+}
+
+<div class="container mt-5">
+    <h2 class="text-success"><i class="bi bi-easel"></i> Propor um novo Workshop</h2>
+    <p class="text-muted">Tens uma ideia incrível? Preenche os dados abaixo. A nossa equipa irá analisar a tua proposta em breve!</p>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-6 mb-5">
+            <form method="post" class="card shadow-sm p-4 border-0">
+                <div class="mb-3">
+                    <label asp-for="Workshop.Titulo" class="form-label fw-bold">Título do Workshop</label>
+                    <input asp-for="Workshop.Titulo" class="form-control" placeholder="Ex: Introdução à Inteligência Artificial" />
+                    <span asp-validation-for="Workshop.Titulo" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Workshop.Descricao" class="form-label fw-bold">Descrição</label>
+                    <textarea asp-for="Workshop.Descricao" class="form-control" rows="4" placeholder="O que os participantes vão aprender?"></textarea>
+                    <span asp-validation-for="Workshop.Descricao" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Workshop.Data" class="form-label fw-bold">Data e Hora Sugerida</label>
+                    <input asp-for="Workshop.Data" class="form-control" type="datetime-local" />
+                    <span asp-validation-for="Workshop.Data" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Workshop.CategoriaId" class="form-label fw-bold">Categoria</label>
+                    <select asp-for="Workshop.CategoriaId" class="form-select" asp-items="ViewBag.CategoriaId">
+                        <option value="">-- Seleciona a área do evento --</option>
+                    </select>
+                    <span asp-validation-for="Workshop.CategoriaId" class="text-danger"></span>
+                </div>
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-start mt-2">
+                    <button type="submit" class="btn btn-success fw-bold px-4"><i class="bi bi-send"></i> Submeter Proposta</button>
+                    <a asp-page="/Index" class="btn btn-outline-secondary px-4">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

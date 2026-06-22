@@ -1,0 +1,37 @@
+﻿@page
+@model TrabalhoWeb_25940.Pages.Categorias.IndexModel
+
+@{
+    ViewData["Title"] = "Categorias";
+}
+
+<a href="/Index" class="text-secondary fs-5 text-decoration-none mb-3 d-inline-block" title="Voltar ao Painel Admin">
+    <i class="bi bi-arrow-left-circle-fill"></i> Voltar ao Painel
+</a>
+
+<h1>Categorias</h1>
+
+<p>
+    <a asp-page="Create" class="btn btn-primary">Criar Nova Categoria</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Categoria[0].Nome)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Categoria) {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.Nome)</td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
