@@ -1,21 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 using TrabalhoWeb_25940.Data;
 using TrabalhoWeb_25940.Models;
 
 namespace TrabalhoWeb_25940.Pages.Workshops
 {
+    [Authorize] // <-- O CADEADO DE SEGURANÇA ESTÁ AQUI
     public class EditModel : PageModel
     {
-        private readonly TrabalhoWeb_25940.Data.AppDbContext _context;
+        private readonly AppDbContext _context;
 
-        public EditModel(TrabalhoWeb_25940.Data.AppDbContext context)
+        public EditModel(AppDbContext context)
         {
             _context = context;
         }
@@ -30,18 +30,19 @@ namespace TrabalhoWeb_25940.Pages.Workshops
                 return NotFound();
             }
 
-            var workshop =  await _context.Workshops.FirstOrDefaultAsync(m => m.Id == id);
+            var workshop = await _context.Workshops.FirstOrDefaultAsync(m => m.Id == id);
             if (workshop == null)
             {
                 return NotFound();
             }
             Workshop = workshop;
-           ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Id");
+
+            // Descomenta a linha abaixo se usares Categorias:
+            // ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Nome");
+
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)

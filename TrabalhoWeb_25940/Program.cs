@@ -1,50 +1,60 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using TrabalhoWeb_25940.Data;
+using TrabalhoWeb_25940.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. ATIVAR RAZOR PAGES E OS CONTROLLERS DA API
+// 1. Adicionar os serviços base do projeto
 builder.Services.AddRazorPages();
-builder.Services.AddControllers(); // Obrigatório para a API funcionar
+builder.Services.AddControllers();
 
-// 2. CONFIGURAR A CONEXÃO À BASE DE DADOS
+// 2. Adicionar o SignalR
+builder.Services.AddSignalR();
+
+// 3. Configurar a Base de Dados
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") ??
-    "Server=(localdb)\\mssqllocaldb;Database=TrabalhoWeb_25940;Trusted_Connection=True;MultipleActiveResultSets=true"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// 3. CONFIGURAR O SISTEMA DE COOKIEAUTH
-builder.Services.AddAuthentication("CookieAuth")
-    .AddCookie("CookieAuth", options =>
+// 🛡️ 4. O NOVO SISTEMA DE LOGIN (Super leve e sem problemas com a BD!)
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
     {
-        options.LoginPath = "/Account/Login";
+        options.LoginPath = "/Login";
     });
+
+// 5. Configurar os serviços do Swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// 4. EXECUTAR O SEED DATA AUTOMÁTICO SESSÃO APÓS LIGAR
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    SeedData.Initialize(services);
-}
-
-// Configuração do Pipeline do Servidor
+// 6. Configurar o pipeline HTTP
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
 
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Gather.io API V1");
+    c.RoutePrefix = "swagger";
+});
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
 
+// 7. O CADEADO PRINCIPAL 
 app.UseAuthentication();
 app.UseAuthorization();
 
-// 5. MAPEAR AS ROTAS DO SITE E DA API
+// 8. Mapear todas as rotas
 app.MapRazorPages();
-app.MapControllers(); // Obrigatório para mapear as rotas da API
+app.MapControllers();
+app.MapHub<WorkshopHub>("/workshopHub");
 
 app.Run();

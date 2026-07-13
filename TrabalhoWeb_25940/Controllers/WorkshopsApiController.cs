@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TrabalhoWeb_25940.Data;
+using TrabalhoWeb_25940.Models; // Garante que lê os modelos
 
 namespace TrabalhoWeb_25940.Controllers
 {
@@ -63,6 +64,82 @@ namespace TrabalhoWeb_25940.Controllers
             }
 
             return Ok(workshop);
+        }
+
+        // POST: api/WorkshopsApi
+        // CRIAR: Recebe um workshop em formato JSON e guarda-o na Base de Dados
+        [HttpPost]
+        public async Task<ActionResult<object>> PostWorkshop(Workshop workshop)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState); // Valida se os campos obrigatórios foram preenchidos
+            }
+
+            _context.Workshops.Add(workshop);
+            await _context.SaveChangesAsync();
+
+            // Devolve o status 201 (Created) e indica onde o novo workshop pode ser lido
+            return CreatedAtAction(nameof(GetWorkshop), new { id = workshop.Id }, workshop);
+        }
+
+        // PUT: api/WorkshopsApi/5
+        // EDITAR: Recebe um ID e os dados atualizados, e modifica-os na Base de Dados
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutWorkshop(int id, Workshop workshop)
+        {
+            if (id != workshop.Id)
+            {
+                return BadRequest(new { mensagem = "O ID enviado no URL não coincide com o ID do corpo do pedido." });
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            _context.Entry(workshop).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!WorkshopExists(id))
+                {
+                    return NotFound(new { mensagem = "Workshop não encontrado para atualizar." });
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent(); // Devolve status 204 (Sucesso, sem conteúdo para retornar)
+        }
+
+        // DELETE: api/WorkshopsApi/5
+        // APAGAR: Remove um workshop da Base de Dados através do seu ID
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteWorkshop(int id)
+        {
+            var workshop = await _context.Workshops.FindAsync(id);
+            if (workshop == null)
+            {
+                return NotFound(new { mensagem = "Workshop não encontrado para eliminação." });
+            }
+
+            _context.Workshops.Remove(workshop);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { mensagem = "Workshop eliminado com sucesso!" });
+        }
+
+        // Função auxiliar para verificar se um workshop existe
+        private bool WorkshopExists(int id)
+        {
+            return _context.Workshops.Any(e => e.Id == id);
         }
     }
 }

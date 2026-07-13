@@ -1,13 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System.Threading.Tasks;
 using TrabalhoWeb_25940.Data;
 using TrabalhoWeb_25940.Models;
 
 namespace TrabalhoWeb_25940.Pages.Workshops
 {
+    [Authorize] // <-- O CADEADO DE SEGURANÇA ESTÁ AQUI
     public class DeleteModel : PageModel
     {
         private readonly AppDbContext _context;
@@ -48,22 +49,13 @@ namespace TrabalhoWeb_25940.Pages.Workshops
             }
 
             var workshop = await _context.Workshops.FindAsync(id);
-
             if (workshop != null)
             {
                 Workshop = workshop;
-
-                // 1. LIMPEZA: Apaga todas as inscrições associadas a este workshop
-                var inscricoesAssociadas = _context.Inscricoes.Where(i => i.WorkshopId == id);
-                _context.Inscricoes.RemoveRange(inscricoesAssociadas);
-
-                // 2. APAGA O WORKSHOP: Agora a base de dados já deixa apagar sem dar erro!
                 _context.Workshops.Remove(Workshop);
-
                 await _context.SaveChangesAsync();
             }
 
-            // Volta para a lista de gestão após apagar
             return RedirectToPage("./Index");
         }
     }
