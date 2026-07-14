@@ -1,6 +1,9 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies; // <-- 1. Adicionado para o Login funcionar
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -35,14 +38,15 @@ namespace TrabalhoWeb_25940.Pages.Account
         {
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        // 2. Adicionado o "returnUrl" para ele saber de onde o utilizador foi expulso
+        public async Task<IActionResult> OnPostAsync(string? returnUrl = null)
         {
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            // 1. Procurar o utilizador na Base de Dados
+            // 1. Procurar o utilizador na Base de Dados (A TUA LÓGICA EXCELENTE!)
             var utilizador = await _context.Participantes
                 .FirstOrDefaultAsync(p => p.Email == Input.Email && p.Password == Input.Password);
 
@@ -77,13 +81,19 @@ namespace TrabalhoWeb_25940.Pages.Account
                 claims.Add(new Claim(ClaimTypes.Role, "Utilizador"));
             }
 
-            // AQUI ESTÁ A CORREÇÃO: Usar o nome exato da tua configuração ("CookieAuth")
-            var claimsIdentity = new ClaimsIdentity(claims, "CookieAuth");
+            // 4. A CORREÇÃO: Substituir "CookieAuth" pelo nome oficial do Program.cs
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-            // 4. Fazer o Login efetivo com o mesmo nome
+            // 5. Fazer o Login efetivo
             await HttpContext.SignInAsync(
-                "CookieAuth",
+                CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity));
+
+            // 6. Redirecionar inteligentemente de volta (ex: para o Create) se houver um link pendente
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
 
             return RedirectToPage("/Index");
         }

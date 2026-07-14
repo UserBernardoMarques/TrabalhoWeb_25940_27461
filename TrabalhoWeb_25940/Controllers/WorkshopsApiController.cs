@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization; // <-- 1. A Biblioteca de Segurança
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TrabalhoWeb_25940.Data;
-using TrabalhoWeb_25940.Models; // Garante que lê os modelos
+using TrabalhoWeb_25940.Models;
 
 namespace TrabalhoWeb_25940.Controllers
 {
@@ -20,7 +21,7 @@ namespace TrabalhoWeb_25940.Controllers
         }
 
         // GET: api/WorkshopsApi
-        // Devolve a lista de todos os workshops aprovados em formato JSON
+        // PÚBLICO: Qualquer pessoa pode ler a lista (Sem cadeado)
         [HttpGet]
         public async Task<ActionResult<IEnumerable<object>>> GetWorkshops()
         {
@@ -41,7 +42,7 @@ namespace TrabalhoWeb_25940.Controllers
         }
 
         // GET: api/WorkshopsApi/5
-        // Devolve apenas um workshop específico por ID
+        // PÚBLICO: Qualquer pessoa pode ler um workshop específico (Sem cadeado)
         [HttpGet("{id}")]
         public async Task<ActionResult<object>> GetWorkshop(int id)
         {
@@ -66,25 +67,28 @@ namespace TrabalhoWeb_25940.Controllers
             return Ok(workshop);
         }
 
+        // --------------------------------------------------------
+        // ZONA DE PERIGO: APENAS UTILIZADORES AUTENTICADOS (LOGIN)
+        // --------------------------------------------------------
+
         // POST: api/WorkshopsApi
-        // CRIAR: Recebe um workshop em formato JSON e guarda-o na Base de Dados
+        [Authorize] // <-- CADEADO!
         [HttpPost]
         public async Task<ActionResult<object>> PostWorkshop(Workshop workshop)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState); // Valida se os campos obrigatórios foram preenchidos
+                return BadRequest(ModelState);
             }
 
             _context.Workshops.Add(workshop);
             await _context.SaveChangesAsync();
 
-            // Devolve o status 201 (Created) e indica onde o novo workshop pode ser lido
             return CreatedAtAction(nameof(GetWorkshop), new { id = workshop.Id }, workshop);
         }
 
         // PUT: api/WorkshopsApi/5
-        // EDITAR: Recebe um ID e os dados atualizados, e modifica-os na Base de Dados
+        [Authorize] // <-- CADEADO!
         [HttpPut("{id}")]
         public async Task<IActionResult> PutWorkshop(int id, Workshop workshop)
         {
@@ -116,11 +120,11 @@ namespace TrabalhoWeb_25940.Controllers
                 }
             }
 
-            return NoContent(); // Devolve status 204 (Sucesso, sem conteúdo para retornar)
+            return NoContent();
         }
 
         // DELETE: api/WorkshopsApi/5
-        // APAGAR: Remove um workshop da Base de Dados através do seu ID
+        [Authorize] // <-- CADEADO!
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteWorkshop(int id)
         {
@@ -136,7 +140,6 @@ namespace TrabalhoWeb_25940.Controllers
             return Ok(new { mensagem = "Workshop eliminado com sucesso!" });
         }
 
-        // Função auxiliar para verificar se um workshop existe
         private bool WorkshopExists(int id)
         {
             return _context.Workshops.Any(e => e.Id == id);

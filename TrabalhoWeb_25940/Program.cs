@@ -16,11 +16,11 @@ builder.Services.AddSignalR();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// 🛡️ 4. O NOVO SISTEMA DE LOGIN (Super leve e sem problemas com a BD!)
+// 🛡️ 4. O NOVO SISTEMA DE LOGIN (Aponta para a vossa pasta Account)
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = "/Login";
+        options.LoginPath = "/Account/Login"; // <-- CORRIGIDO AQUI
     });
 
 // 5. Configurar os serviços do Swagger
