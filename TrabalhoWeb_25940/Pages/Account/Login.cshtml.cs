@@ -3,10 +3,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies; // <-- 1. Adicionado para o Login funcionar
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.SignalR; // Adicionado
+using TrabalhoWeb_25940.Hubs; // Adicionado
 using TrabalhoWeb_25940.Data;
 
 namespace TrabalhoWeb_25940.Pages.Account
@@ -14,10 +16,12 @@ namespace TrabalhoWeb_25940.Pages.Account
     public class LoginModel : PageModel
     {
         private readonly AppDbContext _context;
+        private readonly IHubContext<WorkshopHub> _hubContext; // Adicionado
 
-        public LoginModel(AppDbContext context)
+        public LoginModel(AppDbContext context, IHubContext<WorkshopHub> hubContext)
         {
             _context = context;
+            _hubContext = hubContext;
         }
 
         [BindProperty]
@@ -38,7 +42,6 @@ namespace TrabalhoWeb_25940.Pages.Account
         {
         }
 
-        // 2. Adicionado o "returnUrl" para ele saber de onde o utilizador foi expulso
         public async Task<IActionResult> OnPostAsync(string? returnUrl = null)
         {
             if (!ModelState.IsValid)
@@ -46,7 +49,6 @@ namespace TrabalhoWeb_25940.Pages.Account
                 return Page();
             }
 
-            // 1. Procurar o utilizador na Base de Dados (A TUA LÓGICA EXCELENTE!)
             var utilizador = await _context.Participantes
                 .FirstOrDefaultAsync(p => p.Email == Input.Email && p.Password == Input.Password);
 
@@ -56,14 +58,12 @@ namespace TrabalhoWeb_25940.Pages.Account
                 return Page();
             }
 
-            // 1.5 REGRA DE APROVAÇÃO: Se a conta ainda não estiver aprovada pelo Admin
             if (utilizador.Aprovado == false && utilizador.Email != "admin@gather.io")
             {
                 ModelState.AddModelError(string.Empty, "A tua conta ainda está a aguardar aprovação da administração. Tenta mais tarde.");
                 return Page();
             }
 
-            // 2. Criar a "Identidade" do utilizador (O Crachá virtual)
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, utilizador.Nome),
@@ -71,7 +71,6 @@ namespace TrabalhoWeb_25940.Pages.Account
                 new Claim("ParticipanteId", utilizador.Id.ToString())
             };
 
-            // 3. REGRA DE ADMINISTRADOR
             if (utilizador.Email == "admin@gather.io")
             {
                 claims.Add(new Claim(ClaimTypes.Role, "Administrador"));
@@ -81,15 +80,22 @@ namespace TrabalhoWeb_25940.Pages.Account
                 claims.Add(new Claim(ClaimTypes.Role, "Utilizador"));
             }
 
-            // 4. A CORREÇÃO: Substituir "CookieAuth" pelo nome oficial do Program.cs
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-            // 5. Fazer o Login efetivo
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity));
 
-            // 6. Redirecionar inteligentemente de volta (ex: para o Create) se houver um link pendente
+            // 📢 NOTIFICAÇÃO SIGNALR (Exemplo): Disparar quando o utilizador faz login com sucesso!
+            try
+            {
+                await _hubContext.Clients.All.SendAsync("ReceberNotificacao", $"{utilizador.Nome} acabou de entrar na plataforma!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro SignalR: " + ex.Message);
+            }
+
             if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
             {
                 return Redirect(returnUrl);

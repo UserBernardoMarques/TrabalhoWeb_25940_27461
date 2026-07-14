@@ -2,6 +2,8 @@ using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.SignalR; // Adicionado
+using TrabalhoWeb_25940.Hubs; // Adicionado
 using TrabalhoWeb_25940.Data;
 using TrabalhoWeb_25940.Models;
 
@@ -10,10 +12,12 @@ namespace TrabalhoWeb_25940.Pages.Workshops
     public class InscreverModel : PageModel
     {
         private readonly AppDbContext _context;
+        private readonly IHubContext<WorkshopHub> _hubContext; // Adicionado
 
-        public InscreverModel(AppDbContext context)
+        public InscreverModel(AppDbContext context, IHubContext<WorkshopHub> hubContext)
         {
             _context = context;
+            _hubContext = hubContext;
         }
 
         [BindProperty]
@@ -37,7 +41,6 @@ namespace TrabalhoWeb_25940.Pages.Workshops
         {
             var workshopAtual = await _context.Workshops.FindAsync(Workshop.Id);
 
-            // Tenta encontrar a conta do utilizador pelo email
             var participante = await _context.Participantes
                 .FirstOrDefaultAsync(p => p.Email == EmailConfirmacao);
 
@@ -48,17 +51,26 @@ namespace TrabalhoWeb_25940.Pages.Workshops
                 return Page();
             }
 
-            // Cria um pedido pendente na nova tabela de Inscrições para o Admin ver!
             var novoPedido = new Inscricao
             {
                 ParticipanteId = participante.Id,
                 WorkshopId = workshopAtual!.Id,
                 DataPedido = DateTime.Now,
-                Aprovada = false // Fica a falso até carregares em "Aceitar"
+                Aprovada = false
             };
 
             _context.Inscricoes.Add(novoPedido);
             await _context.SaveChangesAsync();
+
+            // 📢 NOTIFICAÇÃO SIGNALR: Avisa o Administrador que há uma nova inscrição pendente!
+            try
+            {
+                await _hubContext.Clients.All.SendAsync("ReceberNotificacao", $"Nova inscrição pendente para o workshop '{workshopAtual.Titulo}'!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro SignalR: " + ex.Message);
+            }
 
             return RedirectToPage("/Index");
         }

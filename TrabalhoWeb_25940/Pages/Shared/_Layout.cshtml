@@ -18,6 +18,42 @@
             .navbar {
                 padding: 15px 0;
             }
+
+            /* Animação para o Sino abanar (Com a correção @@ para o Razor) */
+            @@keyframes abanar {
+                0% {
+                    transform: rotate(0);
+                }
+
+                15% {
+                    transform: rotate(20deg);
+                }
+
+                30% {
+                    transform: rotate(-20deg);
+                }
+
+                45% {
+                    transform: rotate(10deg);
+                }
+
+                60% {
+                    transform: rotate(-10deg);
+                }
+
+                75% {
+                    transform: rotate(0);
+                }
+
+                100% {
+                    transform: rotate(0);
+                }
+            }
+
+            .animacao-sino {
+                display: inline-block;
+                animation: abanar 1.5s ease-in-out infinite;
+            }
     </style>
 </head>
 <body>
@@ -79,6 +115,17 @@
             </div>
         </nav>
     </header>
+
+    <div id="caixaSino" class="alert shadow-lg bg-white" style="position: fixed; top: 90px; left: 20px; z-index: 1050; display: none; border: 1px solid #dee2e6; border-left: 5px solid #ffc107; min-width: 320px; border-radius: 8px;">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-bell-fill fs-2 text-warning me-3 animacao-sino"></i>
+            <div>
+                <h6 class="mb-1 fw-bold text-dark">Nova Atualização</h6>
+                <span id="textoSino" class="text-muted" style="font-size: 0.95rem;"></span>
+            </div>
+            <button type="button" class="btn-close ms-auto mb-auto mt-1" onclick="document.getElementById('caixaSino').style.display='none'"></button>
+        </div>
+    </div>
 
     <div class="container mt-4">
         <main role="main" class="pb-3">
