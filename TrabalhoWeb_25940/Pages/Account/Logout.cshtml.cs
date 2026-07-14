@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Threading.Tasks;
 
 namespace TrabalhoWeb_25940.Pages.Account
 {
@@ -8,10 +10,39 @@ namespace TrabalhoWeb_25940.Pages.Account
     {
         public async Task<IActionResult> OnGetAsync()
         {
-            // A CORREÇÃO ESTÁ AQUI: Usar exatamente o mesmo nome que está registado no teu sistema!
-            await HttpContext.SignOutAsync("CookieAuth");
+            // 1. Limpa o esquema padrão atual do sistema (Cookies)
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-            // Redireciona para a página principal
+            // 2. Tenta limpar o esquema antigo (CookieAuth) caso o browser do utilizador ainda o tenha guardado em memória
+            try
+            {
+                await HttpContext.SignOutAsync("CookieAuth");
+            }
+            catch
+            {
+                // Ignora silenciosamente se o esquema legado não existir
+            }
+
+            // 3. Redireciona de volta para a página inicial
+            return RedirectToPage("/Index");
+        }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            // 1. Limpa o esquema padrão atual do sistema (Cookies)
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            // 2. Tenta limpar o esquema antigo (CookieAuth) caso o browser do utilizador ainda o tenha guardado em memória
+            try
+            {
+                await HttpContext.SignOutAsync("CookieAuth");
+            }
+            catch
+            {
+                // Ignora silenciosamente se o esquema legado não existir
+            }
+
+            // 3. Redireciona de volta para a página inicial
             return RedirectToPage("/Index");
         }
     }

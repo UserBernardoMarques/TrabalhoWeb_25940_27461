@@ -9,18 +9,18 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 
-// 2. Adicionar o SignalR
+// 2. Adicionar o SignalR (Serviço do motor de tempo real)
 builder.Services.AddSignalR();
 
-// 3. Configurar a Base de Dados
+// 3. Configurar a Base de Dados SQL Server
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// 🛡️ 4. O NOVO SISTEMA DE LOGIN (Aponta para a vossa pasta Account)
+// 🛡️ 4. Sistema de Autenticação (Cookies)
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = "/Account/Login"; // <-- CORRIGIDO AQUI
+        options.LoginPath = "/Account/Login";
     });
 
 // 5. Configurar os serviços do Swagger
@@ -48,13 +48,18 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-// 7. O CADEADO PRINCIPAL 
+// 🔧 CORREÇÃO PARA A AZURE: Ativar explicitamente o suporte de WebSockets no pipeline antes da segurança
+app.UseWebSockets();
+
+// 7. O CADEADO PRINCIPAL (Autenticação e Autorização)
 app.UseAuthentication();
 app.UseAuthorization();
 
-// 8. Mapear todas as rotas
+// 8. Mapear todas as rotas da aplicação
 app.MapRazorPages();
 app.MapControllers();
+
+// Mapeamento do Hub do SignalR (Rota idêntica à do site.js)
 app.MapHub<WorkshopHub>("/workshopHub");
 
 app.Run();
