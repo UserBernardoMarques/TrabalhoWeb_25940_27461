@@ -7,8 +7,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.SignalR; // Adicionado
-using TrabalhoWeb_25940.Hubs; // Adicionado
 using TrabalhoWeb_25940.Data;
 
 namespace TrabalhoWeb_25940.Pages.Account
@@ -16,12 +14,10 @@ namespace TrabalhoWeb_25940.Pages.Account
     public class LoginModel : PageModel
     {
         private readonly AppDbContext _context;
-        private readonly IHubContext<WorkshopHub> _hubContext; // Adicionado
 
-        public LoginModel(AppDbContext context, IHubContext<WorkshopHub> hubContext)
+        public LoginModel(AppDbContext context)
         {
             _context = context;
-            _hubContext = hubContext;
         }
 
         [BindProperty]
@@ -85,16 +81,6 @@ namespace TrabalhoWeb_25940.Pages.Account
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity));
-
-            // 📢 NOTIFICAÇÃO SIGNALR (Exemplo): Disparar quando o utilizador faz login com sucesso!
-            try
-            {
-                await _hubContext.Clients.All.SendAsync("ReceberNotificacao", $"{utilizador.Nome} acabou de entrar na plataforma!");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Erro SignalR: " + ex.Message);
-            }
 
             if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
             {
